@@ -1,0 +1,59 @@
+﻿@page "/countries"
+
+@inject IRepository repository
+
+
+@if (Countries is null)
+{
+
+    <div class="spinner"></div>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            Countries
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>País</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var country in Countries!)
+                    {
+                        <tr>
+                            <td>
+                                <a class="btn btn-sm btn-warning">Edit</a>
+                                <button class="btn btn-sm btn-danger">Del</button>
+                            </td>
+                            <td>
+                                @country.Name
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+
+
+
+
+@code {
+    public List<Country>? Countries { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // await Task.Delay(3000);
+        var responseHttp = await repository.Get<List<Country>>("/api/countries");
+        Countries = responseHttp.Response;
+    }
+
+}
