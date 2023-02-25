@@ -10,5 +10,8 @@ namespace Sales.Shared.Entities
         [Required(ErrorMessage = "Field {0} is required")]
         [MaxLength(50, ErrorMessage = "Field {0} allows max {1} characters")]
         public string Name { get; set; } = null!;
+
+        public ICollection<State>? States { get; set; }
+        public int StatesNumber => States == null ? 0 : States.Count;
     }
 }
