@@ -39,6 +39,7 @@ else
                                 @country.StatesNumber
                             </td>
                             <td>
+                                <a class="btn btn-sm btn-info" href="/countries/details/@country.Id">Details</a>
                                 <a class="btn btn-sm btn-warning" href="/countries/edit/@country.Id">Edit</a>
                                 <button class="btn btn-sm btn-danger" @onclick=@(() => DeleteAsync(country.Id))>Del</button>
                             </td>
