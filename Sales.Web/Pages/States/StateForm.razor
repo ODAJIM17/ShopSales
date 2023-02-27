@@ -5,14 +5,14 @@
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>State/City:</label>
+        <label>State Name:</label>
         <div>
             <InputText class="form-control" @bind-Value="@State.Name" />
             <ValidationMessage For="@(() => State.Name)" />
         </div>
     </div>
-    <button class="btn btn-sm btn-primary" type="submit">Save Changes</button>
-    <button class="btn btn-sm btn-success" @onclick="ReturnAction">Return</button>
+    <button class="btn btn-sm rounded-pill btn-primary" type="submit"><i class="oi oi-wrench"></i> Save Changes</button>
+    <button class="btn btn-sm rounded-pill btn-success" @onclick="ReturnAction"><i class="oi oi-loop-circular"></i> Return</button>
 </EditForm>
 
 @code {

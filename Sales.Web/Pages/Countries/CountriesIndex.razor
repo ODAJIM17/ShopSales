@@ -7,55 +7,50 @@
 
 @if (Countries is null)
 {
-
     <div class="spinner"></div>
 }
 else
 {
 
-            <div class="card">
-                <div class="card-header">
-                    <span><i class="oi oi-globe"></i> Countries Form <a class="btn btn-sm btn-primary float-end" href="/countries/create"><i class="oi oi-plus"></i> Add Country</a></span>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
+    <div class="card">
+        <div class="card-header">
+            <span><i class="oi oi-globe"></i> Countries Form <a class="btn btn-sm rounded-pill btn-primary float-end" href="/countries/create"><i class="oi oi-plus"></i> Add Country</a></span>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>País</th>
+                        <th>States/Cities</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var country in Countries!)
+                    {
+                        <tr>
 
-                                <th>País</th>
-                                <th>Estados/Cities</th>
-                                <th>@*<a class="btn btn-sm btn-primary" href="/countries/create"><i class="oi oi-plus"></i> Add Country</a>*@</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var country in Countries!)
-                            {
-                                <tr>
+                            <td>
+                                @country.Name
+                            </td>
+                            <td>
+                                @country.StatesNumber
+                            </td>
+                            <td>
+                                <a class="btn btn-sm rounded-pill text-white btn-info" href="/countries/details/@country.Id"><i class="oi oi-list"></i> Details</a>
+                                <a class="btn btn-sm rounded-pill btn-warning" href="/countries/edit/@country.Id"><i class="oi oi-pencil"></i> Edit</a>
+                                <button class="btn btn-sm rounded-pill btn-danger" @onclick=@(() => DeleteAsync(country.Id))><i class="oi oi-trash"></i> Del</button>
+                            </td>
+                            <td></td>
+                        </tr>
 
-                                    <td>
-                                        @country.Name
-                                    </td>
-                                    <td>
-                                        @country.StatesNumber
-                                    </td>
-                                    <td>
-                                        <a class="btn btn-sm btn-info" href="/countries/details/@country.Id"><i class="oi oi-list"></i> Details</a>
-                                        <a class="btn btn-sm btn-warning" href="/countries/edit/@country.Id"><i class="oi oi-pencil"></i> Edit</a>
-                                        <button class="btn btn-sm btn-danger" @onclick=@(() => DeleteAsync(country.Id))><i class="oi oi-trash"></i> Del</button>
-                                    </td>
-                                    <td></td>
-                                </tr>
-
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-}       
-
-
-
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
 
 
 @code {

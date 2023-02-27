@@ -3,9 +3,17 @@
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
 
-<h3>Create Country</h3>
 
-<StateForm @ref="stateForm" State="state" OnValidSubmit="Create" ReturnAction="Return" />
+<div class="card">
+    <div class="card-header">
+       <i class="oi oi-globe"></i> Create State
+
+    </div>
+    <div class="card-body">
+        <StateForm @ref="stateForm" State="state" OnValidSubmit="Create" ReturnAction="Return" />
+    </div>
+</div>
+
 
 @code {
     private State state = new();
