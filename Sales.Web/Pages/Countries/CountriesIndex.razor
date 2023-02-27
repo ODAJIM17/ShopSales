@@ -12,46 +12,47 @@
 }
 else
 {
-    <div class="card">
-        <div class="card-header">
-            Countries
-        </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
 
-                        <th>País</th>
-                        <th>Estados/Cities</th>
-                        <th><a class="btn btn-sm btn-primary" href="/countries/create">Add Country</a></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var country in Countries!)
-                    {
-                        <tr>
+            <div class="card">
+                <div class="card-header">
+                    <span><i class="oi oi-globe"></i> Countries Form <a class="btn btn-sm btn-primary float-end" href="/countries/create"><i class="oi oi-plus"></i> Add Country</a></span>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
 
-                            <td>
-                                @country.Name
-                            </td>
-                            <td>
-                                @country.StatesNumber
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-info" href="/countries/details/@country.Id">Details</a>
-                                <a class="btn btn-sm btn-warning" href="/countries/edit/@country.Id">Edit</a>
-                                <button class="btn btn-sm btn-danger" @onclick=@(() => DeleteAsync(country.Id))>Del</button>
-                            </td>
-                            <td></td>
-                        </tr>
+                                <th>País</th>
+                                <th>Estados/Cities</th>
+                                <th>@*<a class="btn btn-sm btn-primary" href="/countries/create"><i class="oi oi-plus"></i> Add Country</a>*@</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var country in Countries!)
+                            {
+                                <tr>
 
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-}
+                                    <td>
+                                        @country.Name
+                                    </td>
+                                    <td>
+                                        @country.StatesNumber
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm btn-info" href="/countries/details/@country.Id"><i class="oi oi-list"></i> Details</a>
+                                        <a class="btn btn-sm btn-warning" href="/countries/edit/@country.Id"><i class="oi oi-pencil"></i> Edit</a>
+                                        <button class="btn btn-sm btn-danger" @onclick=@(() => DeleteAsync(country.Id))><i class="oi oi-trash"></i> Del</button>
+                                    </td>
+                                    <td></td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+}       
 
 
 
@@ -62,12 +63,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+
         await LoadAsync();
     }
 
     private async Task LoadAsync()
+
     {
+
         var responseHttp = await repository.Get<List<Country>>("/api/countries");
+        // System.Threading.Thread.Sleep(6000);
         Countries = responseHttp.Response;
     }
 
@@ -76,7 +81,7 @@ else
         var result = await sweetAlertService.FireAsync(new SweetAlertOptions
         {
             Title = "Confirmación",
-            Text = "Do you want to delete this country?",
+            Text = "Are you sure you want to delete this country?",
             Icon = SweetAlertIcon.Question,
             ShowCancelButton = true,
             CancelButtonText = "No",

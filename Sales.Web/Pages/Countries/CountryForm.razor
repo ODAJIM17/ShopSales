@@ -3,18 +3,24 @@
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
 
 
-<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator />
-    <div class="mb-3">
-        <label>País:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Country.Name" />
-            <ValidationMessage For="@(() => Country.Name)" />
-        </div>
+<div class="card">
+    
+    <div class="card-body">
+        <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <div class="mb-3">
+                <label>Country:</label>
+                <div>
+                    <InputText class="form-control" @bind-Value="@Country.Name" />
+                    <ValidationMessage For="@(() => Country.Name)" />
+                </div>
+            </div>
+            <button class="btn btn-sm btn-primary" type="submit"><i class="oi oi-plus"></i> Save Changes</button>
+            <button class="btn btn-sm btn-success" @onclick="ReturnAction"><i class="oi oi-loop-circular"></i> Return</button>
+        </EditForm>
     </div>
-    <button class="btn btn-sm btn-primary" type="submit">Save Changes</button>
-    <button class="btn btn-sm btn-success" @onclick="ReturnAction">Return</button>
-</EditForm>
+</div>
+
 
 @code {
     private EditContext editContext = null!;

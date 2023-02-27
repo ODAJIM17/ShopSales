@@ -3,9 +3,15 @@
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
 
-<h3>Country Create</h3>
 
-<CountryForm @ref="countryForm" Country="country" OnValidSubmit="Create" ReturnAction="Return" />
+    <div class="card">
+        <div class="card-header">
+            Country Form
+        </div>
+        <div class="card-body">
+            <CountryForm @ref="countryForm" Country="country" OnValidSubmit="Create" ReturnAction="Return" />
+        </div>
+    </div>
 
 @code {
     private Country country = new();

@@ -23,7 +23,7 @@ namespace Sales.API.Controllers
         {
 
             return Ok(await _context.Countries
-                .Include(c => c.States)
+                .Include(c => c.States).OrderBy(c=>c.Name)
                 .ToListAsync()); ;
         }
 
