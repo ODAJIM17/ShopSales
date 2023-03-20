@@ -1,51 +1,51 @@
-﻿@page "/countries/details/{Id:int}"
+﻿@page "/states/details/{StateId:int}"
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
 
-@if (country is null)
+@if (state is null)
 {
-   <div class="spinner">
+    <div class="spinner">
 
-   </div>
+    </div>
 }
 else
 {
-<div class="mb-2"> 
-    <a class="btn btn-sm rounded-pill btn-success" href="/countries"><i class="oi oi-loop-circular"></i> Return</a>
-</div>
+    <div class="mb-2">
+        <a class="btn btn-sm rounded-pill btn-success" href="/countries/details/@state.CountryId"><i class="oi oi-loop-circular"></i> Return</a>
+    </div>
     <div class="card">
         <div class="card-header">
-            <span><i class="oi oi-globe text-primary"></i> @country.Name   <a class="btn btn-sm btn-primary rounded-pill float-end" href="/states/create/@country.Id"><i class="oi oi-plus"></i> New State</a></span>
+            <span><i class="oi oi-globe text-primary"></i> @state.Name   <a class="btn btn-sm btn-primary rounded-pill float-end" href="/cities/create/@StateId"><i class="oi oi-plus"></i> New City</a></span>
         </div>
         <div class="card-body">
-            <GenericList MyList="country.States!.ToList()">
+            <GenericList MyList="state.Cities!.ToList()">
                 <Body>
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>State / City</th>
-                                <th>Cities</th>
+                                <th>City</th>
+                                <th></th>
                                 <th>
                                     @*<a class="btn btn-sm btn-primary" href="/states/create/@country.Id"><i class="oi oi-plus"></i> New State</a>
-                                    <a class="btn btn-sm btn-success" href="/countries"><i class="oi oi-loop-circular"></i> Return</a>*@
+                                        <a class="btn btn-sm btn-success" href="/countries"><i class="oi oi-loop-circular"></i> Return</a>*@
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var state in country.States!.ToList())
+                            @foreach (var city in state.Cities!.ToList())
                             {
                                 <tr>
                                     <td>
-                                        @state.Name
+                                        @city.Name
                                     </td>
                                     <td>
-                                        @state.CitiesNumber
+                                      
                                     </td>
                                     <td>
-                                        <a class="btn btn-sm rounded-pill btn-info text-white" href="/states/details/@state.Id"><i class="oi oi-list"></i> Details</a>
-                                        <a class="btn btn-sm rounded-pill  btn-warning" href="/states/edit/@state.Id"><i class="oi oi-pencil"></i> Edit</a>
-                                        <button class="btn btn-sm rounded-pill btn-danger" @onclick=@(() => DeleteAsync(state.Id))><i class="oi oi-trash"></i> Delete</button>
+                                      
+                                        <a class="btn btn-sm rounded-pill  btn-warning" href="/cities/edit/@city.Id"><i class="oi oi-pencil"></i> Edit</a>
+                                        <button class="btn btn-sm rounded-pill btn-danger" @onclick=@(() => DeleteAsync(city.Id))><i class="oi oi-trash"></i> Delete</button>
                                     </td>
                                 </tr>
                             }
@@ -58,14 +58,13 @@ else
     </div>
 }
 
-
 @code {
 
-    private Country? country;
+    private State? state;
    
-
     [Parameter]
-    public int Id { get; set; }
+    public int StateId { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -74,7 +73,7 @@ else
 
     private async Task LoadAsync()
     {
-        var responseHttp = await repository.Get<Country>($"/api/countries/{Id}");
+        var responseHttp = await repository.Get<State>($"/api/states/{StateId}");
         if (responseHttp.Error)
         {
             if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -88,11 +87,11 @@ else
             return;
         }
 
-        country = responseHttp.Response;
+        state = responseHttp.Response;
        
     }
 
-    private async Task DeleteAsync(int id)
+    private async Task DeleteAsync(int CityId)
     {
         var result = await sweetAlertService.FireAsync(new SweetAlertOptions
         {
@@ -110,7 +109,7 @@ else
             return;
         }
 
-        var responseHttp = await repository.Delete($"/api/states/{id}");
+        var responseHttp = await repository.Delete($"/api/cities/{CityId}");
         if (responseHttp.Error)
         {
             if (responseHttp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
@@ -123,4 +122,6 @@ else
 
         await LoadAsync();
     }
+
+
 }
