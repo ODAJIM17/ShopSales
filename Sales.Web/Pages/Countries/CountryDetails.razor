@@ -2,18 +2,20 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
+@inject SweetAlertService sweetAlertService
+@inject IJSRuntime JS
 
 @if (country is null)
 {
-   <div class="spinner">
+    <div class="spinner">
 
-   </div>
+    </div>
 }
 else
 {
-<div class="mb-2"> 
-    <a class="btn btn-sm rounded-pill btn-success" href="/countries"><i class="oi oi-loop-circular"></i> Return</a>
-</div>
+    <div class="mb-2">
+        <a class="btn btn-sm rounded-pill btn-success" href="/countries"><i class="oi oi-loop-circular"></i> Return</a>
+    </div>
     <div class="card">
         <div class="card-header">
             <span><i class="oi oi-globe text-primary"></i> @country.Name   <a class="btn btn-sm btn-primary rounded-pill float-end" href="/states/create/@country.Id"><i class="oi oi-plus"></i> New State</a></span>
@@ -21,14 +23,14 @@ else
         <div class="card-body">
             <GenericList MyList="country.States!.ToList()">
                 <Body>
-                    <table class="table table-striped">
+                    <table id="myTable" class="table table-striped" >
                         <thead>
                             <tr>
                                 <th>State / City</th>
                                 <th>Cities</th>
                                 <th>
                                     @*<a class="btn btn-sm btn-primary" href="/states/create/@country.Id"><i class="oi oi-plus"></i> New State</a>
-                                    <a class="btn btn-sm btn-success" href="/countries"><i class="oi oi-loop-circular"></i> Return</a>*@
+                                        <a class="btn btn-sm btn-success" href="/countries"><i class="oi oi-loop-circular"></i> Return</a>*@
                                 </th>
                             </tr>
                         </thead>
@@ -62,7 +64,7 @@ else
 @code {
 
     private Country? country;
-   
+
 
     [Parameter]
     public int Id { get; set; }
@@ -70,6 +72,15 @@ else
     protected override async Task OnInitializedAsync()
     {
         await LoadAsync();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            JS.InvokeVoidAsync("InitTable");
+        }
+        return base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task LoadAsync()
@@ -89,7 +100,7 @@ else
         }
 
         country = responseHttp.Response;
-       
+
     }
 
     private async Task DeleteAsync(int id)
