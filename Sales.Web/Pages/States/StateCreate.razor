@@ -2,11 +2,11 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
-
+@attribute [Authorize(Roles = "Admin")]
 
 <div class="card">
     <div class="card-header">
-       <i class="oi oi-globe"></i> Create State
+        <i class="oi oi-globe"></i> Create State
 
     </div>
     <div class="card-body">

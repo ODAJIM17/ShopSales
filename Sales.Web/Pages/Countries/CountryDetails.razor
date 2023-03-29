@@ -3,7 +3,7 @@
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
 @inject SweetAlertService sweetAlertService
-@inject IJSRuntime JS
+@attribute [Authorize(Roles = "Admin")]
 
 @if (country is null)
 {
@@ -22,7 +22,7 @@ else
         </div>
         <div class="card-body">
             <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
-               
+
                 <div class="mx-2">
                     <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar estado/departamento..." @bind-value="Filter" />
                 </div>
@@ -41,7 +41,7 @@ else
                                 <th style="width:140px">Cities</th>
                                 <th style="width:260px">
                                     @*<a class="btn btn-sm btn-primary" href="/states/create/@country.Id"><i class="oi oi-plus"></i> New State</a>
-                                <a class="btn btn-sm btn-success" href="/countries"><i class="oi oi-loop-circular"></i> Return</a>*@
+                                        <a class="btn btn-sm btn-success" href="/countries"><i class="oi oi-loop-circular"></i> Return</a>*@
                                 </th>
                             </tr>
                         </thead>

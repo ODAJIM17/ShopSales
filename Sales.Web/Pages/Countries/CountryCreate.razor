@@ -2,16 +2,17 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
+@attribute [Authorize(Roles = "Admin")]
 
 
-    <div class="card">
-        <div class="card-header">
-            Country Form
-        </div>
-        <div class="card-body">
-            <CountryForm @ref="countryForm" Country="country" OnValidSubmit="CreateAsync" ReturnAction="Return" />
-        </div>
+<div class="card">
+    <div class="card-header">
+        Country Form
     </div>
+    <div class="card-body">
+        <CountryForm @ref="countryForm" Country="country" OnValidSubmit="CreateAsync" ReturnAction="Return" />
+    </div>
+</div>
 
 @code {
     private Country country = new();
@@ -23,7 +24,7 @@
         if (httpResponse.Error)
         {
             var message = await httpResponse.GetErrorMessageAsync();
-            await sweetAlertService.FireAsync("Error", message,SweetAlertIcon.Error);
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
 

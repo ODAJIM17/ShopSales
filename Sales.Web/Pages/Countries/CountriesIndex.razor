@@ -3,6 +3,7 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
+@attribute [Authorize(Roles = "Admin")]
 
 
 
@@ -12,23 +13,23 @@
 }
 else
 {
-   
 
-<div class="card">
-    <div class="card-header">
-        <span><i class="oi oi-globe"></i> Countries Form <a class="btn btn-sm rounded-pill btn-primary float-end" href="/countries/create"><i class="oi oi-plus"></i> Add Country</a></span>
-    </div>
-    <div class="card-body">
-        <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
-            <div class="mx-2">
-                <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar país..." @bind-value="Filter" />
-            </div>
-            <div>
-                <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync">Filtrar</button>
-                <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
-            </div>
 
+    <div class="card">
+        <div class="card-header">
+            <span><i class="oi oi-globe"></i> Countries Form <a class="btn btn-sm rounded-pill btn-primary float-end" href="/countries/create"><i class="oi oi-plus"></i> Add Country</a></span>
         </div>
+        <div class="card-body">
+            <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+                <div class="mx-2">
+                    <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Buscar país..." @bind-value="Filter" />
+                </div>
+                <div>
+                    <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync">Filtrar</button>
+                    <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync">Limpiar</button>
+                </div>
+
+            </div>
 
             <table id="myTable1" class="table table-striped" style="width:100%">
                 <thead>
@@ -70,7 +71,7 @@ else
             </div>
         </div>
     </div>
-  
+
 }
 
 

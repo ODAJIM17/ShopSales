@@ -2,7 +2,7 @@
 @inject IRepository repository
 @inject SweetAlertService sweetAlertService
 @inject NavigationManager navigationManager
-
+@attribute [Authorize(Roles = "Admin")]
 
 
 
@@ -16,12 +16,12 @@ else
     <div class="card">
         <div class="card-header">
             <i class="oi oi-globe"></i> Edit Country
-</div>
+        </div>
         <div class="card-body">
             <CountryForm @ref="countryForm" Country="country" OnValidSubmit="EditAsync" ReturnAction="Return" />
         </div>
     </div>
-    
+
 }
 
 @code {

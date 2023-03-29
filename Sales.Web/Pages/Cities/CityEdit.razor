@@ -2,7 +2,7 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
-
+@attribute [Authorize(Roles = "Admin")]
 
 <h3>Edit City</h3>
 
@@ -56,7 +56,7 @@ else
 
     private void Return()
     {
-       cityForm!.FormPostedSuccessfully = true;
+        cityForm!.FormPostedSuccessfully = true;
         navigationManager.NavigateTo($"/states/details/{city!.StateId}");
     }
 }
