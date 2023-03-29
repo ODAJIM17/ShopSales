@@ -56,7 +56,7 @@ namespace Sales.API.Data
                                             List<CityResponse> cities = (List<CityResponse>)responseCities.Result!;
                                             foreach (CityResponse cityResponse in cities)
                                             {
-                                            if (cityResponse.Name == "Mosfellsbær" || cityResponse.Name == "Șăulița" || cityResponse.Name == "The Bahamas")
+                                            if (cityResponse.Name == "Mosfellsbær" || cityResponse.Name == "Șăulița")
                                             {
                                                 continue;
                                             }

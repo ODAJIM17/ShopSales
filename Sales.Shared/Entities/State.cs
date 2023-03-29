@@ -14,7 +14,7 @@ namespace Sales.Shared.Entities
 
         [Display(Name = "State/City Name")]
         [Required(ErrorMessage = "Field {0} is required")]
-        [MaxLength(50, ErrorMessage = "Field {0} allows max {1} characters")]
+        [MaxLength(100, ErrorMessage = "Field {0} allows max {1} characters")]
         public string Name { get; set; } = null!;
 
         public int CountryId { get; set; }
