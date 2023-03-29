@@ -17,7 +17,7 @@ namespace Sales.Shared.Entities
         [MaxLength(100, ErrorMessage = "Field {0} allows max {1} characters")]
         public string Name { get; set; } = null!;
         public int StateId { get; set; }
-
         public State? State { get; set; }
+        public ICollection<User>? Users { get; set; }
     }
 }
