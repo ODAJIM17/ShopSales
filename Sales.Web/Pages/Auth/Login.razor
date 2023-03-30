@@ -1,40 +1,46 @@
 ﻿@layout AuthLayout
 @page "/Login"
+@inject AuthenticationStateProvider AuthenticationStateProvider 
 @inject IRepository repository
 @inject SweetAlertService sweetAlertService
 @inject NavigationManager navigationManager
 @inject ILoginService loginService
 
 
-
 <EditForm Model="loginDTO" OnValidSubmit="LoginAsync">
     <DataAnnotationsValidator />
-    <div class="col-md-4 offset-md-4 mt-4">
-        <div class="card bg-light mb-3" style="max-width: 50rem;">
-            <h5 class="card-header text-center"><i class="oi oi-envelope-open"></i> Sign in with your E-Mail Account</h5>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label>Email:</label>
-                            <div>
-                                <InputText class="form-control smfont" @bind-Value="@loginDTO.Email" />
-                                <ValidationMessage For="@(() => loginDTO.Email)" />
+
+    <div class="container">
+        <div class="col-md-6 offset-md-3 mt-4">
+            <div class="card bg-light mb-3" style="max-width: 40rem;">
+                <h5 class="card-header text-center"><i class="oi oi-envelope-open"></i> Sign in with your E-Mail Account</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mb-3">
+                                <label>Email:</label>
+                                <div>
+                                    <InputText class="form-control smfont" @bind-Value="@loginDTO.Email" placeholder="Email address..." />
+                                    <ValidationMessage For="@(() => loginDTO.Email)" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label>Password:</label>
-                            <div>
-                                <InputText type="password" class="form-control smfont" @bind-Value="@loginDTO.Password" />
-                                <ValidationMessage For="@(() => loginDTO.Password)" />
+                            <div class="mb-3">
+                                <label>Password:</label>
+                                <div>
+                                    <InputText type="password" class="form-control smfont" @bind-Value="@loginDTO.Password"  placeholder="Password..." />
+                                    <ValidationMessage For="@(() => loginDTO.Password)" />
+                                </div>
                             </div>
+                            <button class="btn btn-sm btn-primary" type="submit">Login</button>
                         </div>
-                        <button class="btn btn-sm btn-primary" type="submit">Login</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+
 </EditForm>
 
 @code {

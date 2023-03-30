@@ -13,7 +13,7 @@ namespace Sales.Shared.DTOs
     {
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [Required(ErrorMessage = "{0} is required.")]
         [StringLength(20, MinimumLength = 6, ErrorMessage = "{0} Should have between {2} y {1} characters.")]
         public string Password { get; set; } = null!;
 
