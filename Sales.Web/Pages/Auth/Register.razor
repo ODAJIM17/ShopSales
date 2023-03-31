@@ -13,48 +13,48 @@
     <div class="container">
         <div class=" card">
             <div class="card-header">
-                <h5>Registration Form</h5>
+                <h5><i class="oi oi-person"></i> Registration Form</h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label>First Name:</label>
+                            <label class="smfontBold">First Name:</label>
                             <div>
                                 <InputText class="form-control smfont" @bind-Value="@userDTO.FirstName" />
                                 <ValidationMessage For="@(() => userDTO.FirstName)" />
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label>Last Name:</label>
+                            <label class="smfontBold">Last Name:</label>
                             <div>
                                 <InputText class="form-control smfont" @bind-Value="@userDTO.LastName" />
                                 <ValidationMessage For="@(() => userDTO.LastName)" />
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label>Document:</label>
+                            <label class="smfontBold">Document:</label>
                             <div>
                                 <InputText class="form-control smfont" @bind-Value="@userDTO.Document" />
                                 <ValidationMessage For="@(() => userDTO.Document)" />
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label>Phone:</label>
+                            <label class="smfontBold">Phone:</label>
                             <div>
                                 <InputText class="form-control smfont" @bind-Value="@userDTO.PhoneNumber" />
                                 <ValidationMessage For="@(() => userDTO.PhoneNumber)" />
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label>Address:</label>
+                            <label class="smfontBold">Address:</label>
                             <div>
                                 <InputText class="form-control smfont" @bind-Value="@userDTO.Address" />
                                 <ValidationMessage For="@(() => userDTO.Address)" />
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label>Email:</label>
+                            <label class="smfontBold">Email:</label>
                             <div>
                                 <InputText class="form-control smfont" @bind-Value="@userDTO.Email" />
                                 <ValidationMessage For="@(() => userDTO.Email)" />
@@ -63,7 +63,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label>Country:</label>
+                            <label class="smfontBold">Country:</label>
                             <div>
                                 <select class="form-select smfont" @onchange="CountryChangedAsync">
                                     <option value="0">Select a country...</option>
@@ -78,7 +78,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label>State/Departament:</label>
+                            <label class="smfontBold">State/Departament:</label>
                             <div>
                                 <select class="form-select smfont" @onchange="StateChangedAsync">
                                     <option value="0">Select state...</option>
@@ -94,7 +94,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label>City:</label>
+                            <label class="smfontBold">City:</label>
                             <div>
                                 <select class="form-select smfont" @bind="userDTO.CityId">
                                     <option value="0">Select a city...</option>
@@ -109,27 +109,22 @@
                                 <ValidationMessage For="@(() => userDTO.CityId)" />
                             </div>
                         </div>
-
                         <div class="mb-3">
-                            <label>Photo:</label>
-                            <div>
-                                <InputText class="form-control smfont" @bind-Value="@userDTO.Photo" />
-                                <ValidationMessage For="@(() => userDTO.Photo)" />
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label>Password:</label>
+                            <label class="smfontBold">Password:</label>
                             <div>
                                 <InputText type="password" class="form-control smfont" @bind-Value="@userDTO.Password" />
                                 <ValidationMessage For="@(() => userDTO.Password)" />
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label>Confirm Password:</label>
+                            <label class="smfontBold">Confirm Password:</label>
                             <div>
                                 <InputText type="password" class="form-control smfont" @bind-Value="@userDTO.PasswordConfirm" />
                                 <ValidationMessage For="@(() => userDTO.PasswordConfirm)" />
                             </div>
+                        </div>
+                        <div class="mb-3">
+                            <InputImg Label="Photo:" ImageSelected="ImageSelected" ImageURL="@imageUrl" />
                         </div>
                     </div>
                 </div>
@@ -144,11 +139,19 @@
     private List<Country>? countries;
     private List<State>? states;
     private List<City>? cities;
+    private string? imageUrl;
 
     protected async override Task OnInitializedAsync()
     {
         await LoadCountriesAsync();
     }
+
+    private void ImageSelected(string imagenBase64)
+    {
+        userDTO.Photo = imagenBase64;
+        imageUrl = null;
+    }
+
 
     private async Task LoadCountriesAsync()
     {
@@ -190,7 +193,7 @@
         await LoadCitiesAsyn(selectedState);
     }
 
-   
+
 
     private async Task LoadCitiesAsyn(int stateId)
     {
