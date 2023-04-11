@@ -67,7 +67,7 @@ builder.Services.AddIdentity<User, IdentityRole>(x =>
     x.Password.RequireLowercase = false;
     x.Password.RequireNonAlphanumeric = false;
     x.Password.RequireUppercase = false;
-})
+}) 
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
 
