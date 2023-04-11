@@ -20,13 +20,16 @@ namespace Sales.API.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
         private readonly IFileStorage _fileStorage;
+        private readonly IMailHelper _mailHelper;
         private readonly string _container;
 
-        public AccountController(IUserHelper userHelper, IConfiguration configuration, IFileStorage fileStorage)
+        public AccountController(IUserHelper userHelper, IConfiguration configuration, 
+            IFileStorage fileStorage, IMailHelper mailHelper)
         {
             _userHelper = userHelper;
             _configuration = configuration;
             _fileStorage = fileStorage;
+            _mailHelper = mailHelper;
             _container = "users";
         }
 
@@ -118,12 +121,50 @@ namespace Sales.API.Controllers
             if (result.Succeeded)
             {
                 await _userHelper.AddUserToRoleAsync(user, user.UserType.ToString());
-                return Ok(BuildToken(user));
+                var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                var tokenLink = Url.Action("ConfirmEmail", "Account", new
+                {
+                    userid = user.Id,
+                    token = myToken
+                }, HttpContext.Request.Scheme, _configuration["UrlWEB"]);
+
+                var response = _mailHelper.SendMail(user.FullName, user.Email!,
+                    $"Sales- Account Confirmation",
+                    $"<h1>Sales - Email Confirmation</h1>" +
+                    $"<p>Thank you for registering with the Shop-Sales Online customer store. In order to complete your registration please, activate your account by clicking 'Confirm Email':</p>" +
+                    $"<b><a href ={tokenLink}>Confirm Email</a></b>");
+
+                if (response.IsSuccess)
+                {
+                    return NoContent();
+                }
+
+                return BadRequest(response.Message);
             }
 
             return BadRequest(result.Errors.FirstOrDefault());
         }
 
+
+
+        [HttpGet("ConfirmEmail")]
+        public async Task<ActionResult> ConfirmEmailAsync(string userId, string token)
+        {
+            token = token.Replace(" ", "+");
+            var user = await _userHelper.GetUserAsync(new Guid(userId));
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors.FirstOrDefault());
+            }
+
+            return NoContent();
+        }
 
 
         [HttpPost("Login")]
@@ -136,8 +177,21 @@ namespace Sales.API.Controllers
                 return Ok(BuildToken(user));
             }
 
+            if (result.IsLockedOut)
+            {
+                return BadRequest("To many tries your account has been blocked. Please try again in 5 minutes.");
+            }
+
+            if (result.IsNotAllowed)
+            {
+                return BadRequest("Your Email is not confirmed. Please check your email and follow the instructions.");
+            }
+
+
             return BadRequest("Invalid email or password.");
         }
+
+
 
         private TokenDTO BuildToken(User user)
         {
