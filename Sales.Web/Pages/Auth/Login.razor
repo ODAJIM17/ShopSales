@@ -13,7 +13,12 @@
     <div class="container">
         <div class="col-md-6 offset-md-3 mt-4">
             <div class="card bg-light mb-3" style="max-width: 40rem;">
-                <h5 class="card-header text-center"><i class="oi oi-envelope-open"></i> Sign in with your E-Mail Account</h5>
+                <div class="card-header">
+                    <span>
+                        <i class="oi oi-envelope-open"></i> Sign in with your E-Mail Account
+                        <a class="btn btn-sm btn-primary float-end" href="/Register"><i class="oi oi-book"></i> Register</a>
+                    </span>
+                </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
@@ -31,12 +36,26 @@
                                     <ValidationMessage For="@(() => loginDTO.Password)" />
                                 </div>
                             </div>
-                            <button class="btn btn-sm btn-primary" type="submit">Login</button>
+                            <button class="btn btn-sm btn-primary" type="submit"><i class="oi oi-account-login"></i> Login</button>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a class="btn btn-link" href="/ResendToken">Send email to activate account</a>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <a class="btn btn-sm btn-primary" href="/RecoverPassword"><i class="oi oi-lock-locked"></i> Forgot password?</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <a class="btn btn-sm btn-success" href="/ResendToken"><i class="oi oi-action-redo"></i> Forgot to activate account?</a>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
          
