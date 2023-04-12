@@ -4,10 +4,18 @@
 @inject SweetAlertService sweetAlertService
 @inject NavigationManager navigationManager
 
-<h3>Confirm email</h3>
 
-<p>Please click this botton in order to confirm your email. Thanks</p>
-<button class="btn btn-primary" @onclick="ConfirmAccountAsync">Confirma Account</button>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h5> <i class="oi oi-person" /> Confirm Email</h5>
+        </div>
+        <div class="card-body">
+            <p>Please click this botton in order to confirm your email. Thanks...</p>
+            <button class="btn btn-sm rounded-pill btn-primary" @onclick="ConfirmAccountAsync">Confirm Account</button>
+        </div>
+    </div>
+</div>
 
 @code {
     private string? message;

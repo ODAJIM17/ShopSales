@@ -27,7 +27,7 @@
                             <div class="mb-3">
                                 <label>Password:</label>
                                 <div>
-                                    <InputText type="password" class="form-control smfont" @bind-Value="@loginDTO.Password"  placeholder="Password..." />
+                                    <InputText type="password" class="form-control smfont" @bind-Value="@loginDTO.Password" placeholder="Password..." />
                                     <ValidationMessage For="@(() => loginDTO.Password)" />
                                 </div>
                             </div>
@@ -35,7 +35,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="card-footer">
+                    <a class="btn btn-link" href="/ResendToken">Send email to activate account</a>
+                </div>
             </div>
+         
         </div>
     </div>
 

@@ -146,6 +146,38 @@ namespace Sales.API.Controllers
         }
 
 
+        [HttpPost("ResedToken")]
+        public async Task<ActionResult> ResedToken([FromBody] EmailDTO model)
+        {
+            User user = await _userHelper.GetUserAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            //TODO Improve code
+            var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+            var tokenLink = Url.Action("ConfirmEmail", "account", new
+            {
+                userid = user.Id,
+                token = myToken
+            }, HttpContext.Request.Scheme, _configuration["UrlWEB"]);
+
+            var response = _mailHelper.SendMail(user.FullName, user.Email!,
+                 $"Sales- Account Confirmation",
+                $"<h1>Sales - Email Confirmation</h1>" +
+                  $"<p>Thank you for registering with the Shop-Sales Online customer store. In order to complete your registration please, activate your account by clicking 'Confirm Email':</p>" +
+                $"<b><a href ={tokenLink}>Confirm Email</a></b>");
+
+            if (response.IsSuccess)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(response.Message);
+        }
+
+
 
         [HttpGet("ConfirmEmail")]
         public async Task<ActionResult> ConfirmEmailAsync(string userId, string token)
