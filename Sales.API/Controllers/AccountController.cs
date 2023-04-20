@@ -198,7 +198,7 @@ namespace Sales.API.Controllers
 
 
         [HttpPost("ResedToken")]
-        public async Task<ActionResult> ResedToken([FromBody] EmailDTO model)
+        public async Task<ActionResult> ResendToken([FromBody] EmailDTO model)
         {
             User user = await _userHelper.GetUserAsync(model.Email);
             if (user == null)
@@ -267,7 +267,8 @@ namespace Sales.API.Controllers
 
             if (result.IsNotAllowed)
             {
-                return BadRequest("Your Email is not confirmed. Please check your email and follow the instructions.");
+                //return BadRequest("Your Email is not confirmed. Please check your email and follow the instructions.");
+                return BadRequest("The email address has not been verified. Upon registration an email was sent to you with instructions to verify your email address. Click the Resend Email Button to resend the email.");
             }
 
 

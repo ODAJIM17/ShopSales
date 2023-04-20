@@ -1,6 +1,6 @@
 ﻿@layout AuthLayout
 @page "/Login"
-@inject AuthenticationStateProvider AuthenticationStateProvider 
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IRepository repository
 @inject SweetAlertService sweetAlertService
 @inject NavigationManager navigationManager
@@ -15,8 +15,8 @@
             <div class="card bg-light mb-3" style="max-width: 40rem;">
                 <div class="card-header">
                     <span>
-                        <i class="oi oi-envelope-open"></i> Sign in with your E-Mail Account
-                        <a class="btn btn-sm btn-primary float-end" href="/Register"><i class="oi oi-book"></i> Register</a>
+                        <strong>  <i class="oi oi-envelope-open"></i> Sign in with your E-Mail Account</strong>
+                        <a class="btn btn-sm btn-warning float-end" href="/ResendToken"><i class="oi oi-action-redo"></i> Resend Email</a>
                     </span>
                 </div>
                 <div class="card-body">
@@ -36,29 +36,37 @@
                                     <ValidationMessage For="@(() => loginDTO.Password)" />
                                 </div>
                             </div>
-                            <button class="btn btn-sm btn-primary" type="submit"><i class="oi oi-account-login"></i> Login</button>
-                        </div>
+                            <div class="mb-2">
+                                <div class"form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Remember me?
+                                    </label>
+                                </div>
+                            </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="d-grid">
+                                            <button class="btn btn-sm btn-primary" type="submit"><i class="oi oi-account-login"></i> Login</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-grid">
+                                            <a class="btn btn-sm btn-secondary" href="/RecoverPassword"><i class="oi oi-lock-locked"></i> Forgot password?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer text-center">
                     <div class="row">
-
-                        <div class="col-md-6">
-                            <div class="d-grid">
-                                <a class="btn btn-sm btn-primary" href="/RecoverPassword"><i class="oi oi-lock-locked"></i> Forgot password?</a>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="d-grid">
-                                <a class="btn btn-sm btn-success" href="/ResendToken"><i class="oi oi-action-redo"></i> Forgot to activate account?</a>
-                            </div>
+                        <div class="col-md-12">
+                            Don't have an account?<a class="btn btn-link" href="/Register"> Sign up</a>
                         </div>
                     </div>
-
-
                 </div>
             </div>
-         
         </div>
     </div>
 
@@ -75,6 +83,7 @@
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessageAsync();
+
             await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }

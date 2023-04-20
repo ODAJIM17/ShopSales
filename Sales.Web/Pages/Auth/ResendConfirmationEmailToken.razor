@@ -9,6 +9,10 @@
     <div class="spinner" />
 }
 <div class="container">
+    <div class="alert alert-dark" role="alert">
+      <i class="oi oi-warning"></i>  Our record indicates that you have registered but you never confirmed your email. Please enter your email in the form below, check your email and follow the instructions.
+    </div>
+    
     <div class="row">
         <div class="col-12">
             <EditForm Model="emailDTO" OnValidSubmit="ResendConfirmationEmailTokenAsync">
@@ -16,13 +20,13 @@
                 <div class="card">
                     <div class="card-header">
                         <span>
-                            <i class="oi oi-key" /> Reenviar correo de confirmación de contraseña
-                            <button class="btn btn-sm btn-primary float-end mx-2" type="submit"><i class="oi oi-loop-square" /> Reenviar</button>
+                            <i class="oi oi-key" /> Registration Confirmation
+                            <button class="btn btn-sm btn-primary float-end mx-2" type="submit"><i class="oi oi-loop-square" /> Send Confirmation</button>
                         </span>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label>Email:</label>
+                            <label>Enter your email address:</label>
                             <div>
                                 <InputText class="form-control" @bind-Value="@emailDTO.Email" />
                                 <ValidationMessage For="@(() => emailDTO.Email)" />
@@ -43,7 +47,7 @@
     private async Task ResendConfirmationEmailTokenAsync()
     {
         loading = true;
-        var responseHttp = await repository.Post("/api/accounts/ResedToken", emailDTO);
+        var responseHttp = await repository.Post("/api/accounts/ResendToken", emailDTO);
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessageAsync();

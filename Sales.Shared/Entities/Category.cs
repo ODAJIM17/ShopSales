@@ -16,6 +16,11 @@ namespace Sales.Shared.Entities
         [MaxLength(100, ErrorMessage = "{0} allows max {1} characters.")]
         [Required(ErrorMessage = "{0} is required.")]
         public string Name { get; set; } = null!;
+        public ICollection<ProductCategory>? ProductCategories { get; set; }
+
+        [Display(Name = "Products")]
+        public int ProductCategoriesNumber => ProductCategories == null ? 0 : ProductCategories.Count;
+
 
     }
 }

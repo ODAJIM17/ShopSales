@@ -11,21 +11,24 @@ namespace Sales.API.Controllers
 {
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("/api/categories")]
-    public class CategoiresController : ControllerBase
+    [Route("/api/products")]
+    public class ProductsController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IFileStorage _fileStorage;
 
-        public CategoiresController(DataContext context)
+        public ProductsController(DataContext context, IFileStorage fileStorage)
         {
             _context = context;
+            _fileStorage = fileStorage;
         }
-
 
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] PaginationDTO pagination)
         {
-            var queryable = _context.Categories
+            var queryable = _context.Products
+                .Include(x => x.ProductImages)
+                .Include(x => x.ProductCategories)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -43,7 +46,7 @@ namespace Sales.API.Controllers
         [HttpGet("totalPages")]
         public async Task<ActionResult> GetPages([FromQuery] PaginationDTO pagination)
         {
-            var queryable = _context.Categories
+            var queryable = _context.Products
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
@@ -57,38 +60,59 @@ namespace Sales.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var category = await _context.Categories
+            var product = await _context.Products
+                .Include(x => x.ProductImages)
+                .Include(x => x.ProductCategories!)
+                .ThenInclude(x => x.Category)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            if (category is null)
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return Ok(category);
+            return Ok(product);
         }
 
-
         [HttpPost]
-        public async Task<ActionResult> Post(Category category)
+        public async Task<ActionResult> PostAsync(ProductDTO productDTO)
         {
-            _context.Add(category);
             try
             {
+                Product newProduct = new()
+                {
+                    Name = productDTO.Name,
+                    Description = productDTO.Description,
+                    Price = productDTO.Price,
+                    Stock = productDTO.Stock,
+                    ProductCategories = new List<ProductCategory>(),
+                    ProductImages = new List<ProductImage>()
+                };
+
+                foreach (var productImage in productDTO.ProductImages!)
+                {
+                    var photoProduct = Convert.FromBase64String(productImage);
+                    newProduct.ProductImages.Add(new ProductImage { Image = await _fileStorage.SaveFileAsync(photoProduct, ".jpg", "products") });
+                }
+
+                foreach (var productCategoryId in productDTO.ProductCategoryIds!)
+                {
+                    newProduct.ProductCategories.Add(new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == productCategoryId) });
+                }
+
+                _context.Add(newProduct);
                 await _context.SaveChangesAsync();
-                return Ok(category);
+                return Ok(productDTO);
             }
             catch (DbUpdateException dbUpdateException)
             {
                 if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
                 {
-                    return BadRequest(category.Name + " Already exists in the database.");
+                    return BadRequest("Ya existe una ciudad con el mismo nombre.");
                 }
-                else
-                {
-                    return BadRequest(dbUpdateException.InnerException.Message);
-                }
+
+                return BadRequest(dbUpdateException.Message);
             }
             catch (Exception exception)
             {
@@ -97,24 +121,22 @@ namespace Sales.API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> Put(Category category)
+        public async Task<ActionResult> PutAsync(Product product)
         {
-            _context.Update(category);
             try
             {
+                _context.Update(product);
                 await _context.SaveChangesAsync();
-                return Ok(category);
+                return Ok(product);
             }
             catch (DbUpdateException dbUpdateException)
             {
                 if (dbUpdateException.InnerException!.Message.Contains("duplicate"))
                 {
-                    return BadRequest(category.Name + " Already exists in the database.");
+                    return BadRequest("Ya existe un producto con el mismo nombre.");
                 }
-                else
-                {
-                    return BadRequest(dbUpdateException.InnerException.Message);
-                }
+
+                return BadRequest(dbUpdateException.Message);
             }
             catch (Exception exception)
             {
@@ -125,13 +147,13 @@ namespace Sales.API.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
-            if (category == null)
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            _context.Remove(category);
+            _context.Remove(product);
             await _context.SaveChangesAsync();
             return NoContent();
         }
