@@ -29,11 +29,6 @@ else
                             <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync"><i class="oi oi-ban" /> Limpiar</button>
                         </div>
                     </div>
-
-                    <Pagination CurrentPage="currentPage"
-                                TotalPages="totalPages"
-                                SelectedPage="SelectedPageAsync" />
-
                     <table class="table table-striped smfont">
                         <thead>
                             <tr>
@@ -80,6 +75,12 @@ else
                             }
                         </tbody>
                     </table>
+                </div>
+                <div class="card-footer">
+
+                    <Pagination CurrentPage="currentPage"
+                                TotalPages="totalPages"
+                                SelectedPage="SelectedPageAsync" />
                 </div>
             </div>
         </Body>
