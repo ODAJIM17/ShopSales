@@ -35,7 +35,7 @@ else
         <Authorized>
             @if (counter > 0)
             {
-                <a href="/Orders/ShowCart" class="btn rounded-pill btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="View my cart"><i class="oi oi-cart"></i> Cart (@counter)</a>
+                <a href="/Orders/ShowCart" class="btn rounded-pill btn-warning float-end" data-bs-toggle="tooltip" data-bs-placement="right" title="View my cart"><i class="oi oi-cart"></i> Cart (@counter)</a>
             }
         </Authorized>
     </AuthorizeView>
@@ -60,7 +60,7 @@ else
                         <h5 class="text-muted">@($"{product.Price:C2}")</h5>
                     </div>
                     <div class="card-footer text-center">
-                        <a href="/products/details/@product.Id" class="btn btn-sm rounded-pill btn-secondary"><i class="oi oi-info" /> Details</a>
+                        <a href="/orders/details/@product.Id" class="btn btn-sm rounded-pill btn-secondary"><i class="oi oi-info" /> Details</a>
                         <button class="btn btn-sm rounded-pill btn-primary" @onclick=@(() => AddToCartAsync(product.Id))><i class="oi oi-cart" /> Add to Cart</button>
                     </div>
                 </div>
