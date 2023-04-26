@@ -23,15 +23,24 @@
 }
 else
 {
-    <div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
-        <div>
-            <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Search product..." @bind-value="Filter" />
-        </div>
-        <div class="mx-1">
-            <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync"><i class="oi oi-magnifying-glass" /> Search</button>
-            <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync"><i class="oi oi-ban" /> Reset</button>
-        </div>
+<div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center;">
+    <div>
+        <input style="width: 400px;" type="text" class="form-control" id="titulo" placeholder="Search product..." @bind-value="Filter" />
     </div>
+    <div class="mx-1">
+        <button type="button" class="btn btn-outline-primary" @onclick="ApplyFilterAsync"><i class="oi oi-magnifying-glass" /> Search</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="CleanFilterAsync"><i class="oi oi-ban" /> Reset</button>
+    </div>
+    <AuthorizeView>
+        <Authorized>
+            @if (counter > 0)
+            {
+                <a href="/Orders/ShowCart" class="btn rounded-pill btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="View my cart"><i class="oi oi-cart"></i> Cart (@counter)</a>
+            }
+        </Authorized>
+    </AuthorizeView>
+
+</div>
 
     <Pagination CurrentPage="currentPage"
                 TotalPages="totalPages"
@@ -43,7 +52,7 @@ else
             <div class="col">
                 <div class="card h-100">
                     <div class="text-center zoom">
-                        <img src="@product.MainImage" style="height:150px; max-width:200px;" class="text-center" alt=@product.Name />
+                        <img src="@product.MainImage" style="height:150px; max-width:200px;" class="text-center mt-1" alt=@product.Name />
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-navy"> @product.Name</h5>
@@ -51,8 +60,8 @@ else
                         <h5 class="text-muted">@($"{product.Price:C2}")</h5>
                     </div>
                     <div class="card-footer text-center">
-                        <a href="/products/details/@product.Id" class="btn btn-sm btn-secondary"><i class="oi oi-info" /> Detalles</a>
-                        <button class="btn btn-sm btn-primary" @onclick=@(() => AddToCartAsync(product.Id))><i class="oi oi-plus" /> Agregar al Carro</button>
+                        <a href="/products/details/@product.Id" class="btn btn-sm rounded-pill btn-secondary"><i class="oi oi-info" /> Details</a>
+                        <button class="btn btn-sm rounded-pill btn-primary" @onclick=@(() => AddToCartAsync(product.Id))><i class="oi oi-cart" /> Add to Cart</button>
                     </div>
                 </div>
             </div>
@@ -63,6 +72,8 @@ else
 @code {
     private int currentPage = 1;
     private int totalPages;
+    private int counter = 0;
+    private bool isAuthenticated;
 
     public List<Product>? Products { get; set; }
 
@@ -74,10 +85,42 @@ else
     [SupplyParameterFromQuery]
     public string Filter { get; set; } = "";
 
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; } = null!;
+
+
     protected async override Task OnInitializedAsync()
     {
         await LoadAsync();
     }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await CheckIsAuthenticatedAsync();
+        await LoadCounterAsync();
+    }
+
+    private async Task CheckIsAuthenticatedAsync()
+    {
+        var authenticationState = await authenticationStateTask;
+        isAuthenticated = authenticationState.User.Identity!.IsAuthenticated;
+    }
+
+    private async Task LoadCounterAsync()
+    {
+        if (!isAuthenticated)
+        {
+            return;
+        }
+
+        var responseHttp = await repository.Get<int>("/api/temporalSales/count");
+        if (responseHttp.Error)
+        {
+            return;
+        }
+        counter = responseHttp.Response;
+    }
+
 
     private async Task SelectedPageAsync(int page)
     {
@@ -132,8 +175,45 @@ else
         await SelectedPageAsync(page);
     }
 
-    private void AddToCartAsync(int productId)
+    private async Task AddToCartAsync(int productId)
     {
+        if (!isAuthenticated)
+        {
+            navigationManager.NavigateTo("/Login");
+            var toast1 = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.TopEnd,
+                ShowConfirmButton = false,
+                Timer = 5000
+            });
+            await toast1.FireAsync(icon: SweetAlertIcon.Error, message: "Please loging in order to add products to your shopping cart.");
+            return;
+        }
 
+        var temporalSaleDTO = new TemporalSaleDTO
+        {
+            ProductId = productId
+        };
+
+        var httpResponse = await repository.Post("/api/temporalSales", temporalSaleDTO);
+        if (httpResponse.Error)
+        {
+            var message = await httpResponse.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+
+        await LoadCounterAsync();
+
+        var toast2 = sweetAlertService.Mixin(new SweetAlertOptions
+        {
+            Toast = true,
+            Position = SweetAlertPosition.TopEnd,
+            ShowConfirmButton = false,
+            Timer = 5000
+        });
+        await toast2.FireAsync(icon: SweetAlertIcon.Success, message: "Product added to shopping cart.");
     }
+
 }

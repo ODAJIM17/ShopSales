@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Sales.Web.Repositories
+namespace Sales.WEB.Repositories
 {
     public class HttpResponseWrapper<T>
     {
@@ -8,24 +8,26 @@ namespace Sales.Web.Repositories
         {
             Error = error;
             Response = response;
-            HttpResponseMessage= httpResponseMessage;
-
+            HttpResponseMessage = httpResponseMessage;
         }
 
-        public bool Error { get;  set; }
+        public bool Error { get; set; }
+
         public T? Response { get; set; }
+
         public HttpResponseMessage HttpResponseMessage { get; set; }
 
         public async Task<string?> GetErrorMessageAsync()
         {
-            if(!Error)
+            if (!Error)
             {
                 return null;
             }
+
             var statusCode = HttpResponseMessage.StatusCode;
             if (statusCode == HttpStatusCode.NotFound)
             {
-                return "Source not found";
+                return "Recurso no encontrado";
             }
             else if (statusCode == HttpStatusCode.BadRequest)
             {
@@ -33,14 +35,14 @@ namespace Sales.Web.Repositories
             }
             else if (statusCode == HttpStatusCode.Unauthorized)
             {
-                return "You have to login to perform this operation";
+                return "Tienes que logearte para hacer esta operación";
             }
             else if (statusCode == HttpStatusCode.Forbidden)
             {
-                return "Access denied. Please contact support";
+                return "No tienes permisos para hacer esta operación";
             }
 
-            return "An error has occurred.";
+            return "Ha ocurrido un error inesperado";
         }
     }
 }

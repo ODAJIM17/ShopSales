@@ -27,13 +27,14 @@
                             <div>
                                 <InputText class="form-control smfont" @bind-Value="@userDTO.FirstName" />
                                 <ValidationMessage For="@(() => userDTO.FirstName)" />
+                               
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="smfontBold">Last Name:</label>
                             <div>
                                 <InputText class="form-control smfont" @bind-Value="@userDTO.LastName" />
-                                <ValidationMessage For="@(() => userDTO.LastName)" />
+                                <span class="text-danger"><ValidationMessage For="@(() => userDTO.LastName)" /></span>
                             </div>
                         </div>
                         <div class="mb-3">

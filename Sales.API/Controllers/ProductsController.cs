@@ -45,6 +45,7 @@ namespace Sales.API.Controllers
 
 
         [HttpGet("totalPages")]
+        [AllowAnonymous]
         public async Task<ActionResult> GetPages([FromQuery] PaginationDTO pagination)
         {
             var queryable = _context.Products
@@ -100,7 +101,8 @@ namespace Sales.API.Controllers
 
                 foreach (var productCategoryId in productDTO.ProductCategoryIds!)
                 {
-                    newProduct.ProductCategories.Add(new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == productCategoryId) });
+                    var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == productCategoryId);
+                    newProduct.ProductCategories.Add(new ProductCategory { Category = category! });
                 }
 
                 _context.Add(newProduct);
