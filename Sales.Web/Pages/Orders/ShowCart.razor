@@ -30,7 +30,7 @@ else
                     <EditForm Model="SaleDTO" OnValidSubmit="ConfirmOrderAsync">
                         <DataAnnotationsValidator />
                         <div class="mb-3">
-                            <label>Comentarios:</label>
+                            <label>Coments:</label>
                             <div>
                                 <InputText class="form-control" @bind-Value="@SaleDTO.Remarks" />
                                 <ValidationMessage For="@(() => SaleDTO.Remarks)" />
@@ -78,7 +78,7 @@ else
                                     </td>
                                     <td>
                                         <a href="/Orders/ModifyTemporalSale/@temporalSale.Id" class="btn btn-warning rounded-pill"><i class="oi oi-pencil" /> Edit</a>
-                                        <button class="btn btn-danger rounded-pill"- @onclick=@(() => Delete(temporalSale.Id))><i class="oi oi-trash" /> Del</button>
+                                        <button class="btn btn-danger rounded-pill" @onclick=@(() => Delete(temporalSale.Id))><i class="oi oi-trash" /> Del</button>
                                     </td>
                                 </tr>
                             }
