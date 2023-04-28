@@ -2,7 +2,7 @@
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Admin, User")]
 
 @if (Sales is null)
 {
@@ -27,7 +27,11 @@ else
                         <thead>
                             <tr>
                                 <th>Order Date</th>
-                                <th>Customer</th>
+                                <AuthorizeView Roles="Admin">
+                                    <Authorized>
+                                        <th>Customer</th>
+                                    </Authorized>
+                                </AuthorizeView>                           
                                 <th>Coments</th>
                                 <th>Status</th>
                                 <th>Items</th>
@@ -43,9 +47,14 @@ else
                                     <td>
                                         @($"{sale.Date.ToLocalTime():yyyy/MM/dd hh:mm tt}")
                                     </td>
-                                    <td>
-                                        @sale.User!.FullName
-                                    </td>
+                                    <AuthorizeView Roles="Admin">
+                                        <Authorized>
+                                            <td>
+                                                @sale.User!.FullName
+                                            </td>
+                                        </Authorized>
+                                    </AuthorizeView>
+                                   
                                     <td>
                                         @sale.Remarks
                                     </td>
